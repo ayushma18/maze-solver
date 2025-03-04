@@ -1,59 +1,56 @@
+export const dfs = (graph) => {
+  const startNode = graph.getStartNode();
+  const endNode = graph.getEndNode();
+  
+  if (!startNode || !endNode) return { path: [], visited: [], cost: 0 };
 
-function isValidMove(maze, visited, x, y) {
-    return (
-        x >= 0 && x < maze.length &&
-        y >= 0 && y < maze[0].length &&
-        maze[x][y] === 0 && !visited[x][y]
-    );
-}
+  const visited = [];
+  const stack = [startNode.id];
+  const parent = new Map();
+  let totalCost = 0;
 
-// DFS function to solve the maze
-function dfs(maze, visited, x, y, endX, endY, path) {
-    // If the current position is the end position, return true
-    if (x === endX && y === endY) {
-        path.push([x, y]);
-        return true;
-    }
+  while (stack.length > 0) {
+    const currentId = stack.pop();
+    const currentNode = graph.nodes.get(currentId);
 
-    // Mark the current position as visited
-    visited[x][y] = true;
-    path.push([x, y]);
+    if (!visited.includes(currentId)) {
+      visited.push(currentId);
 
-    // Define the possible moves (right, down, left, up)
-    const moves = [
-        [0, 1],  // right
-        [1, 0],  // down
-        [0, -1], // left
-        [-1, 0]  // up
-    ];
+      if (currentId === endNode.id) {
+        break;
+      }
 
-    // Try each possible move
-    for (const [dx, dy] of moves) {
-        const newX = x + dx;
-        const newY = y + dy;
-
-        if (isValidMove(maze, visited, newX, newY)) {
-            if (dfs(maze, visited, newX, newY, endX, endY, path)) {
-                return true;
-            }
+      for (let neighborId of currentNode.connections) {
+        if (!visited.includes(neighborId)) {
+          stack.push(neighborId);
+          if (!parent.has(neighborId)) {
+            parent.set(neighborId, currentId);
+          }
         }
+      }
     }
+  }
 
-    // If no move is possible, backtrack
-    path.pop();
-    return false;
-}
+  // Build the path
+  const path = [];
+  let current = endNode.id;
 
-// Function to solve the maze
-function solveMaze(maze, startX, startY, endX, endY) {
-    const visited = Array.from({ length: maze.length }, () => Array(maze[0].length).fill(false));
-    const path = [];
-
-    if (dfs(maze, visited, startX, startY, endX, endY, path)) {
-        return path;
-    } else {
-        return null; // No solution found
+  while (current !== undefined && current !== startNode.id) {
+    path.unshift(current);
+    current = parent.get(current);
+    if (path.length > 0) {
+      const prevNode = current;
+      totalCost += graph.getWeight(prevNode, path[0]);
     }
-}
+  }
 
-export { solveMaze };
+  if (current === startNode.id) {
+    path.unshift(startNode.id);
+  }
+
+  return {
+    path,
+    visited,
+    cost: totalCost
+  };
+};

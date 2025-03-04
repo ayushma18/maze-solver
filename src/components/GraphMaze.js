@@ -1,29 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Graph from '../utils/graph';
-import { dijkstra } from '../algorithms/dijkstra';
 import './GraphMaze.css';
+import { dijkstra } from '../algorithms/dijkstra';
+import { bfs } from '../algorithms/bfs';
+import { dfs } from '../algorithms/dfs';
 
-const GraphMaze = ({ algorithm, speed }) => {
+const algorithmMap = {
+  'dijkstra': dijkstra,
+  'bfs': bfs,
+  'dfs': dfs
+};
+
+const GraphMaze = ({ algorithm = 'dijkstra', speed }) => {
   const [graph] = useState(() => {
     const g = new Graph();
     
-    // Define node positions in a more complex layout
+    // Define positions for 8 nodes
     const positions = [
-      { x: 100, y: 250 },   // 0: far left
-      { x: 250, y: 100 },   // 1: top left
-      { x: 250, y: 400 },   // 2: bottom left
-      { x: 400, y: 250 },   // 3: center
-      { x: 550, y: 100 },   // 4: top right
-      { x: 550, y: 400 },   // 5: bottom right
-      { x: 700, y: 250 },   // 6: far right
-      { x: 400, y: 500 },   // 7: bottom center
-      { x: 400, y: 50 },    // 8: top center
-      { x: 250, y: 250 },   // 9: middle left
-      { x: 550, y: 250 },   // 10: middle right
-      { x: 325, y: 175 },   // 11: upper middle
-      { x: 325, y: 325 },   // 12: lower middle
-      { x: 475, y: 175 },   // 13: upper middle right
-      { x: 475, y: 325 },   // 14: lower middle right
+      { x: 200, y: 150 },   // 0: top-left
+      { x: 400, y: 100 },   // 1: top
+      { x: 600, y: 150 },   // 2: top-right
+      { x: 150, y: 300 },   // 3: left
+      { x: 400, y: 300 },   // 4: center
+      { x: 650, y: 300 },   // 5: right
+      { x: 250, y: 450 },   // 6: bottom-left
+      { x: 550, y: 450 },   // 7: bottom-right
     ];
     
     positions.forEach((pos, i) => {
@@ -36,43 +37,21 @@ const GraphMaze = ({ algorithm, speed }) => {
       g.addConnection(id1, id2, weight);
     };
 
-    // Add more complex connections with multiple possible paths
-    addEdgeWithWeight(0, 9);    // Left side connections
-    addEdgeWithWeight(0, 1);
-    addEdgeWithWeight(0, 2);
-    addEdgeWithWeight(1, 9);
-    addEdgeWithWeight(2, 9);
-    addEdgeWithWeight(9, 11);   // Middle-left to center connections
-    addEdgeWithWeight(9, 12);
-    addEdgeWithWeight(11, 3);
-    addEdgeWithWeight(12, 3);
-    addEdgeWithWeight(3, 13);   // Center to middle-right connections
-    addEdgeWithWeight(3, 14);
-    addEdgeWithWeight(13, 10);
-    addEdgeWithWeight(14, 10);
-    addEdgeWithWeight(10, 4);   // Right side connections
-    addEdgeWithWeight(10, 5);
-    addEdgeWithWeight(10, 6);
-    addEdgeWithWeight(4, 6);
-    addEdgeWithWeight(5, 6);
-    addEdgeWithWeight(1, 8);    // Top cross connections
-    addEdgeWithWeight(8, 4);
-    addEdgeWithWeight(8, 11);
-    addEdgeWithWeight(8, 13);
-    addEdgeWithWeight(2, 7);    // Bottom cross connections
-    addEdgeWithWeight(7, 5);
-    addEdgeWithWeight(7, 12);
-    addEdgeWithWeight(7, 14);
-    addEdgeWithWeight(11, 13);  // Center box connections
-    addEdgeWithWeight(13, 14);
-    addEdgeWithWeight(14, 12);
-    addEdgeWithWeight(12, 11);
-    addEdgeWithWeight(9, 3);    // Additional diagonal connections
-    addEdgeWithWeight(3, 10);
-    addEdgeWithWeight(1, 11);
-    addEdgeWithWeight(4, 13);
-    addEdgeWithWeight(2, 12);
-    addEdgeWithWeight(5, 14);
+    // Add connections with specific weights to create interesting paths
+    g.addConnection(0, 1, 20);  // top-left to top
+    g.addConnection(0, 3, 15);  // top-left to left
+    g.addConnection(0, 4, 25);  // top-left to center
+    g.addConnection(1, 2, 20);  // top to top-right
+    g.addConnection(1, 4, 20);  // top to center
+    g.addConnection(2, 5, 15);  // top-right to right
+    g.addConnection(2, 4, 25);  // top-right to center
+    g.addConnection(3, 4, 15);  // left to center
+    g.addConnection(3, 6, 15);  // left to bottom-left
+    g.addConnection(4, 5, 15);  // center to right
+    g.addConnection(4, 6, 20);  // center to bottom-left
+    g.addConnection(4, 7, 20);  // center to bottom-right
+    g.addConnection(5, 7, 15);  // right to bottom-right
+    g.addConnection(6, 7, 30);  // bottom-left to bottom-right
 
     return g;
   });
@@ -122,7 +101,8 @@ const GraphMaze = ({ algorithm, speed }) => {
     setVisited([]);
     setTotalCost(0);
 
-    const result = dijkstra(graph);
+    const selectedAlgorithm = algorithmMap[algorithm] || dijkstra;
+    const result = selectedAlgorithm(graph);
     
     const delays = {
       fast: 100,
@@ -168,7 +148,13 @@ const GraphMaze = ({ algorithm, speed }) => {
       <div className="status-message">
         {!hasStart ? "Select starting node" : !hasEnd ? "Select ending node" : totalCost > 0 ? `Shortest path cost: ${totalCost}` : "Click Solve to find path"}
       </div>
-      <svg width="800" height="600">
+      <svg width="800" height="500" style={{ backgroundColor: '#f8f9fa' }}>
+        <defs>
+          <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+            <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#f0f0f0" strokeWidth="1"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid)" />
         {/* Draw connections */}
         {Array.from(graph.nodes.entries()).map(([id, node]) => (
           node.connections.size > 0 && Array.from(node.connections).map(targetId => {
