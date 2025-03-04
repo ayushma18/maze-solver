@@ -1,0 +1,209 @@
+.graph-maze {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.button-container {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 10px;
+}
+
+.status-message {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  height: 24px;
+  text-align: center;
+  margin-bottom: 10px;
+  padding: 5px 15px;
+  border-radius: 8px;
+  background: rgba(236, 240, 241, 0.8);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.solve-button, .reset-button {
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.solve-button::after, .reset-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.solve-button:hover::after, .reset-button:hover::after {
+  opacity: 1;
+}
+
+.solve-button {
+  background: linear-gradient(135deg, #2193b0, #6dd5ed);
+  color: white;
+}
+
+.reset-button {
+  background: linear-gradient(135deg, #FF416C, #FF4B2B);
+  color: white;
+}
+
+.solve-button:hover:not(:disabled), .reset-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.solve-button:disabled, .reset-button:disabled {
+  background: linear-gradient(135deg, #ccc, #999);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.node-group {
+  cursor: pointer;
+}
+
+.node {
+  fill: #ffffff;
+  stroke: #2c3e50;
+  stroke-width: 2.5;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+}
+
+.node:hover {
+  stroke-width: 3.5;
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,0.2));
+  transform: scale(1.05);
+}
+
+.node.start {
+  fill: #2ecc71;
+  stroke: #27ae60;
+  filter: drop-shadow(0 4px 6px rgba(46,204,113,0.3));
+}
+
+.node.end {
+  fill: #e74c3c;
+  stroke: #c0392b;
+  filter: drop-shadow(0 4px 6px rgba(231,76,60,0.3));
+}
+
+.node.visited {
+  fill: #3498db;
+  stroke: #2980b9;
+  animation: pulseVisited 0.5s ease-in-out;
+}
+
+.node.in-path {
+  fill: #34495e;
+  stroke: #2c3e50;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+  animation: pathNodeAnimation 0.5s ease-in-out;
+}
+
+.node-label {
+  fill: #2c3e50;
+  font-size: 16px;
+  font-weight: bold;
+  user-select: none;
+  pointer-events: none;
+}
+
+.start .node-label,
+.end .node-label,
+.in-path .node-label {
+  fill: white;
+}
+
+.connection-line {
+  stroke: #95a5a6;
+  stroke-width: 3;
+  stroke-linecap: round;
+  filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.1));
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.path-line {
+  stroke: #34495e;
+  stroke-width: 4;
+  stroke-linecap: round;
+  filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+  opacity: 1;
+  animation: pathAnimation 0.8s ease-in-out;
+}
+
+.edge-weight {
+  font-size: 14px;
+  font-weight: bold;
+  fill: #7f8c8d;
+  filter: drop-shadow(0 1px 1px rgba(255,255,255,1));
+  pointer-events: none;
+  user-select: none;
+  background: white;
+  padding: 2px;
+}
+
+.edge-weight.highlight {
+  fill: #2c3e50;
+  font-size: 15px;
+}
+
+@keyframes pathAnimation {
+  from {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    opacity: 0;
+  }
+  to {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes pulseVisited {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 4px 6px rgba(52,152,219,0));
+  }
+  50% {
+    transform: scale(1.1);
+    filter: drop-shadow(0 4px 6px rgba(52,152,219,0.5));
+  }
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 4px 6px rgba(52,152,219,0.3));
+  }
+}
+
+@keyframes pathNodeAnimation {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0));
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+  }
+}

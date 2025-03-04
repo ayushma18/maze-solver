@@ -1,0 +1,160 @@
+.App {
+  text-align: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+  font-family: 'Segoe UI', -apple-system, system-ui, BlinkMacSystemFont, sans-serif;
+}
+
+.navbar {
+  background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%);
+  padding: 1.5rem;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.navbar h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.main-content {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 300px 1fr;
+  align-items: start;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.instructions {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  text-align: left;
+  transition: transform 0.3s ease;
+}
+
+.instructions:hover {
+  transform: translateY(-5px);
+}
+
+.instructions h2 {
+  color: #2193b0;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.instructions p {
+  margin: 1rem 0;
+  font-size: 1.1rem;
+  color: #4a5568;
+  line-height: 1.6;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.instructions p::before {
+  content: "•";
+  color: #2193b0;
+  font-size: 1.5rem;
+}
+
+.legend {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease;
+}
+
+.legend:hover {
+  transform: translateY(-5px);
+}
+
+.legend h2 {
+  color: #2193b0;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 1rem 0;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: #f8fafc;
+  transition: transform 0.2s ease;
+}
+
+.legend-item:hover {
+  transform: scale(1.02);
+}
+
+.legend-box {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.legend-box.start {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+}
+
+.legend-box.end {
+  background: linear-gradient(135deg, #f44336 0%, #e53935 100%);
+}
+
+.legend-box.path {
+  background: linear-gradient(135deg, #212121 0%, #000000 100%);
+}
+
+.legend-item span {
+  color: #4a5568;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.maze-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease;
+}
+
+.maze-container:hover {
+  transform: translateY(-5px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.instructions, .legend, .maze-container {
+  animation: fadeIn 0.6s ease-out;
+}
