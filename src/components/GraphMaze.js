@@ -4,27 +4,28 @@ import './GraphMaze.css';
 import { dijkstra } from '../algorithms/dijkstra';
 import { bfs } from '../algorithms/bfs';
 import { dfs } from '../algorithms/dfs';
+import { astar } from '../algorithms/astar';
 
 const algorithmMap = {
   'dijkstra': dijkstra,
   'bfs': bfs,
-  'dfs': dfs
+  'dfs': dfs,
+  'astar': astar
 };
 
 const GraphMaze = ({ algorithm = 'dijkstra', speed }) => {
   const [graph] = useState(() => {
     const g = new Graph();
     
-    // Define positions for 8 nodes
+    // Define positions for 7 nodes (excluding center node)
     const positions = [
       { x: 200, y: 150 },   // 0: top-left
       { x: 400, y: 100 },   // 1: top
       { x: 600, y: 150 },   // 2: top-right
       { x: 150, y: 300 },   // 3: left
-      { x: 400, y: 300 },   // 4: center
-      { x: 650, y: 300 },   // 5: right
-      { x: 250, y: 450 },   // 6: bottom-left
-      { x: 550, y: 450 },   // 7: bottom-right
+      { x: 650, y: 300 },   // 4: right (previously 5)
+      { x: 250, y: 450 },   // 5: bottom-left (previously 6)
+      { x: 550, y: 450 },   // 6: bottom-right (previously 7)
     ];
     
     positions.forEach((pos, i) => {
@@ -37,21 +38,20 @@ const GraphMaze = ({ algorithm = 'dijkstra', speed }) => {
       g.addConnection(id1, id2, weight);
     };
 
-    // Add connections with specific weights to create interesting paths
-    g.addConnection(0, 1, 20);  // top-left to top
-    g.addConnection(0, 3, 15);  // top-left to left
-    g.addConnection(0, 4, 25);  // top-left to center
-    g.addConnection(1, 2, 20);  // top to top-right
-    g.addConnection(1, 4, 20);  // top to center
-    g.addConnection(2, 5, 15);  // top-right to right
-    g.addConnection(2, 4, 25);  // top-right to center
-    g.addConnection(3, 4, 15);  // left to center
-    g.addConnection(3, 6, 15);  // left to bottom-left
-    g.addConnection(4, 5, 15);  // center to right
-    g.addConnection(4, 6, 20);  // center to bottom-left
-    g.addConnection(4, 7, 20);  // center to bottom-right
-    g.addConnection(5, 7, 15);  // right to bottom-right
-    g.addConnection(6, 7, 30);  // bottom-left to bottom-right
+    // Create connections between 7 nodes
+    g.addConnection(0, 1, 20);  // top edge
+    g.addConnection(1, 2, 20);  // top edge
+    g.addConnection(0, 3, 15);  // left side
+    g.addConnection(2, 4, 15);  // right side
+    g.addConnection(3, 5, 20);  // left bottom
+    g.addConnection(4, 6, 20);  // right bottom
+    g.addConnection(5, 6, 30);  // bottom edge
+    
+    // Cross connections for alternate paths
+    g.addConnection(0, 5, 35);  // left diagonal
+    g.addConnection(2, 6, 35);  // right diagonal
+    g.addConnection(1, 4, 40);  // top-right path
+    g.addConnection(3, 6, 25);  // bottom diagonal
 
     return g;
   });
