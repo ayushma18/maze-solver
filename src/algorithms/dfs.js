@@ -21,6 +21,10 @@ export const dfs = (graph) => {
       }
 
       for (let neighborId of currentNode.connections) {
+        const neighborNode = graph.nodes.get(neighborId);
+        // Skip blocked nodes
+        if (neighborNode.isBlocked) continue;
+        
         if (!visited.includes(neighborId)) {
           stack.push(neighborId);
           if (!parent.has(neighborId)) {

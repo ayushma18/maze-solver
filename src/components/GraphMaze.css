@@ -72,6 +72,11 @@
   stroke: #666;
 }
 
+.node.blocked {
+  fill: #0000ff;  /* Blue */
+  stroke: #0000cc;
+}
+
 .node.in-path:not(.start):not(.end) {
   fill: #fff;
   stroke: #000;
@@ -104,6 +109,46 @@
   font-size: 14px;
   fill: #000;
   font-weight: bold;
+}
+
+.color-guide {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.guide-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.color-box {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #666;
+  border-radius: 4px;
+}
+
+.color-box.start {
+  background-color: #4CAF50;
+}
+
+.color-box.end {
+  background-color: #f44336;
+}
+
+.color-box.blocked {
+  background-color: #0000ff;
+}
+
+.color-box.visited {
+  background-color: #ddd;
+}
+
+.color-box.path {
+  background-color: #000;
 }
 
 .node-group:hover .node:not(.start):not(.end):not(.in-path) {

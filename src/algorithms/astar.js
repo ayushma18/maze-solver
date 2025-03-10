@@ -4,20 +4,19 @@ export function astar(graph) {
     
     if (!start || !end) return { path: [], visited: [], cost: 0 };
 
-    // Priority queue to store nodes to visit
-    // Each element is [nodeId, fScore]
+    
     const openSet = [[start.id, 0]];
     const visited = [];
     
-    // Track g scores (cost from start to node)
+    
     const gScore = new Map();
     gScore.set(start.id, 0);
     
-    // Track f scores (total estimated cost)
+    
     const fScore = new Map();
     fScore.set(start.id, heuristic(graph, start.id, end.id));
     
-    // Track path
+    
     const cameFrom = new Map();
     
     while (openSet.length > 0) {
@@ -37,6 +36,10 @@ export function astar(graph) {
         
         // Check all neighbors
         for (const neighbor of graph.nodes.get(current).connections) {
+            const neighborNode = graph.nodes.get(neighbor);
+            // Skip blocked nodes
+            if (neighborNode.isBlocked) continue;
+            
             const weight = graph.getWeight(current, neighbor);
             const tentativeGScore = gScore.get(current) + weight;
             

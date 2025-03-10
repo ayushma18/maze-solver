@@ -12,7 +12,8 @@ class Graph {
         y,
         connections: new Set(),
         isStart: false,
-        isEnd: false
+        isEnd: false,
+        isBlocked: false
       });
     }
     return this;

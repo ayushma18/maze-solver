@@ -74,6 +74,9 @@ const GraphMaze = ({ algorithm = 'dijkstra', speed }) => {
     } else if (!hasEnd && !clickedNode.isStart) {
       // Second click - set end node if it's not the start node
       graph.setEnd(id);
+    } else if (!clickedNode.isStart && !clickedNode.isEnd) {
+      // Toggle blocked state for non-start/end nodes
+      clickedNode.isBlocked = !clickedNode.isBlocked;
     }
 
     setPath([]);
@@ -87,6 +90,7 @@ const GraphMaze = ({ algorithm = 'dijkstra', speed }) => {
     for (let [id, node] of graph.nodes) {
       node.isStart = false;
       node.isEnd = false;
+      node.isBlocked = false;
     }
     
     setPath([]);
@@ -148,6 +152,28 @@ const GraphMaze = ({ algorithm = 'dijkstra', speed }) => {
       <div className="status-message">
         {!hasStart ? "Select starting node" : !hasEnd ? "Select ending node" : totalCost > 0 ? `Shortest path cost: ${totalCost}` : "Click Solve to find path"}
       </div>
+      <div className="color-guide">
+        <div className="guide-item">
+          <div className="color-box start"></div>
+          <span>Start Node</span>
+        </div>
+        <div className="guide-item">
+          <div className="color-box end"></div>
+          <span>End Node</span>
+        </div>
+        <div className="guide-item">
+          <div className="color-box blocked"></div>
+          <span>Blocked Path</span>
+        </div>
+        <div className="guide-item">
+          <div className="color-box visited"></div>
+          <span>Visited Node</span>
+        </div>
+        <div className="guide-item">
+          <div className="color-box path"></div>
+          <span>Path Node</span>
+        </div>
+      </div>
       <svg width="800" height="500" style={{ backgroundColor: '#f8f9fa' }}>
         <defs>
           <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
@@ -204,8 +230,9 @@ const GraphMaze = ({ algorithm = 'dijkstra', speed }) => {
               rx="5"
               ry="5"
               className={`node ${
-                node.isStart ? 'start' : 
+                node.isStart ? 'start' :
                 node.isEnd ? 'end' :
+                node.isBlocked ? 'blocked' :
                 path.includes(parseInt(id)) ? 'in-path' :
                 visited.includes(parseInt(id)) ? 'visited' :
                 ''
